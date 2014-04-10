@@ -5,7 +5,10 @@
 
 	class Config extends \Cms\System\Core\ModuleConfig {
 
+		public $frontendOptions = true;
+
 		public function boot() {
+
 			/* Adding a new dimension to the file paths */
 			\TemplateFiles::addPath(public_path() . "/Designs");
 
@@ -14,6 +17,12 @@
 			    $this->Main->CurrentPage->addPlaceholder($title);
 			});
 			\Template::addFunction($Func);
+
+			$Func2 = new \Twig_SimpleFunction('dump', function ($what) {
+			    return var_dump($what);
+			});
+
+			\Template::addFunction($Func2);
 
 			if( $dashBoard = \Modules::get('Base','Dashboard') ) {
 				$this->addDashboardElements($dashBoard);
@@ -25,7 +34,6 @@
 			});
 
 		}
-
 
 		private function addDashboardElements($dashBoard) {
 				$sideMenu = $dashBoard->getConfig()->getSideMenu();

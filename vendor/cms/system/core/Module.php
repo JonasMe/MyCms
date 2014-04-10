@@ -27,6 +27,9 @@
 			$this->initiateFromModel();
 		}
 
+		public function getSystemPath() {
+			return $this->systemPath;
+		}
 		public function getName() {
 			return $this->systemName;
 		}
@@ -57,6 +60,11 @@
 		}
 
 		public function getController($class, $method = null, $args = array() ) {
+			
+			if( is_object($class) ) {
+				return call_user_func_array(array($class, $method), $args);
+			}
+
 			if( isset( $this->calledControllers[$class] ) ) {
 				return $this->calledControllers[$class];
 			} else {

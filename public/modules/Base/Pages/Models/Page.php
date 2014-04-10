@@ -8,4 +8,8 @@
 		public function placeholders() {
 			return $this->hasMany('\\Modules\\Base\\Pages\\Models\\Placeholder','page_id','page_id');
 		}
+
+		public function childs() {
+			return $this->hasMany('\\Modules\\Base\\Pages\\Models\\Page','parent_id','page_id');
+		}
 	}

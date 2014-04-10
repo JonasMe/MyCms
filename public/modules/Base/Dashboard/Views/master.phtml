@@ -42,7 +42,9 @@
 		</div>
 		<div class="col-lg-11 content">
 			<div class="subSide pull-left"></div>
-			<div class="bar">Hej med dig kaj</div>
+			<div class="innerContent pull-left minusbar">
+				<div class="bar" >Hej med dig kaj</div>
+			</div>
 		</div>
 	</div>
 
@@ -54,7 +56,80 @@
 		$('.mainWrapper .sidebar, .mainWrapper .content, .mainWrapper .subSide')
 			.height( parseInt($(window).height()) - parseInt($('.mainWrapper .header').height() ) );
 		}
+		function initContentCalls() {
+			$('[content-utilize-ajax="true"]').each(function() {
+				var call 		= $(this).attr('content-ajax');
+				var clasS 		= $(this).attr('content-class');
+				var method 		= $(this).attr('content-method');
+				var args 		= $(this).attr('content-args');
+				var callback 	= $(this).attr('content-callback');
+				var selector	= this;
+				if( $(this).find('>a').length > 0 ) {
+					selector = $(this).children('a');
+				}
+				$(selector).on('click',function() {
+					contentLoading(true);
+					$.ajax({
+					    url : "/Module/"+call,
+					    type: "POST",
+					    data : { "class" : clasS, "method" : method, args : args},
+					    success: function(data)
+					    {
+					    	$('.innerContent').html(data);
+					    	contentLoading(false);
+					    	if( callback != "" ) { eval(callback+"()"); }
+
+					        
+					    },
+					    error: function (jqXHR)
+					    {
+					 
+					    }
+					});
+				});
+
+			});
+		}
+
+		function openSideBar() {
+			$('.minusbar').each(function() {
+				$(this).css('width','80%');
+			});
+
+			$('.subSide').show().css('width','0%').animate({ 'width' : '20%' }, 1000);
+		}
+
+		function contentLoading(show) {
+			obj = $('.content .iAmLoading');
+			if( obj.length > 0 && show == false) {
+				obj.fadeOut('slow');
+			} else {
+				if( obj.length > 0 && show == true) {
+					obj.fadeIn('slow');
+				} else {
+					var overlay = $('<div></div>').hide().css(
+							{ 
+								'position' : 'absolute',
+								'background-color' : 'rgba(0,0,0,0.5)',
+								'top' : '0px',
+								'bottom' : '0px',
+								'left' : '0px',
+								'right' : '0px' }).addClass('iAmLoading').prependTo('.content');
+					var msg = $('<div></div>').html('Vent venligst..').css(
+									{ 
+										'color' : '#fff',
+										'position' : 'fixed',
+										'top' : '50%',
+										'left' : '50%',
+										}).appendTo(overlay);
+					msg.css({'margin-top' : '-'+(msg.height()/2),
+										'margin-left' : '-'+(msg.width()/2) })
+				overlay.fadeIn('slow');
+				}
+			}
+		}
 		$(function() {
+			initContentCalls();
 
 		$('.mainWrapper .sidebar, .mainWrapper .content, .mainWrapper .subSide')
 			.height( parseInt($(window).height()) - parseInt($('.mainWrapper .header').height() ) );
@@ -77,9 +152,9 @@
 					    {
 					    	$('.subSide').html(data);
 					    	if( callback != "" ) { eval(callback+"()"); }
-					    	$('.subSide').show().css('width','0%').animate({ 'width' : '20%' }, 1000,function() {
-					    		
-					    	});
+					    	initContentCalls();
+					    	
+					    	openSideBar();
 					        
 					    },
 					    error: function (jqXHR)

@@ -23,6 +23,9 @@
 				}
 			}
 		}
+		public function dos() {
+			return "HEJ!";
+		}
 
 		public function bootModules() {
 			foreach( $this->collection as $package => $modules ) {
@@ -30,6 +33,9 @@
 					$this->get($package,$name)->boot();
 				}
 			}
+
+			\Template::addGlobal("Modules",$this);
+
 		}
 
 		public function get($package,$module) {
@@ -44,10 +50,23 @@
 			return $this->collection;
 		}
 
+		public function allModulesSingle() {
+			$contain = array();
+			foreach( $this->collection as $package => $modules ) {
+				foreach( $modules as $name => $module ) {
+					$contain[] = $this->get($package,$name);
+				}
+			}
+
+			return $contain;
+		}
+
 		public function moduleExists($package,$name) {
 			$path = public_path() . "/modules/" . $package . "/" . $name;
 			if( is_dir($path) && is_file($path ."/Config.php")) {
 				return true;
+			} else {
+				return false;
 			}
 		}
 	}

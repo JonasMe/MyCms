@@ -6,7 +6,7 @@
 	"require": {
 		"laravel/framework": "4.1.*",
 		"twig/extensions": "*",
-		'knplabs/knp-menu:2.0.*@dev'
+		"knplabs/knp-menu" : "2.0.*@dev"
 	},
 	"autoload": {
 		"classmap": [

@@ -10,60 +10,36 @@
 	</div>
 </div>
 <div class="tree">
-    <ul>
-    	{% for page in pages %}
-	        <li>	<a href="#">{{ page.title }}</a>
 
-	            <ul>
-	                <li>	<a href="#">Child</a>
-
-	                    <ul>
-	                        <li>	<a href="#">Grand Child</a>
-
-	                        </li>
-	                    </ul>
-	                </li>
-	                <li>	<a href="#">Child</a>
-
-	                    <ul>
-	                        <li><a href="#">Grand Child</a>
-	                        </li>
-	                        <li>	<a href="#">Grand Child</a>
-
-	                            <ul>
-	                                <li>	<a href="#">Great Grand Child</a>
-
-	                                </li>
-	                                <li>	<a href="#">Great Grand Child</a>
-
-	                                </li>
-	                                <li>	<a href="#">Great Grand Child</a>
-
-	                                </li>
-	                            </ul>
-	                        </li>
-	                        <li><a href="#">Grand Child</a>
-	                        </li>
-	                    </ul>
-	                </li>
-	            </ul>
-	        </li>
-        {% endfor %}
-    </ul>
+    {{ menu|raw }}
 </div>
 <script type="text/javascript">
 	function TreeReady() {
+
+		$('.tree li').each(function() {
+			if( $(this).children('ul').length > 0 ) {
+				$(this).prepend('<span class="trigger glyphicon glyphicon-expand" style="cursor:pointer;"></span>');
+			}
+		});
 
 		$('.addNewPage').click(function() {
 			$('.helper').slideDown('slow');
 		});
 
 	    $('.tree li li').hide();
-	    $('.tree li').on('click', function (e) {
-	        var children = $(this).find('> ul > li');
-	        if (children.is(":visible")) children.hide('fast');
-	        else children.show('fast');
-	        e.stopPropagation();
+	    $('.tree li .trigger').on('click', function (e) {
+	    	if( $(this).parent().children('ul').length > 0 ) {
+
+	        	var children = $(this).parent().find('> ul > li');
+	        	if (children.is(":visible")) {
+	        		$(this).removeClass('glyphicon-collapse-down').addClass('glyphicon-expand');
+	        		children.hide('fast');
+	        	} else {
+	        		$(this).removeClass('glyphicon-expand').addClass('glyphicon-collapse-down');
+	        		children.show('fast');
+	        	}
+	        	e.stopPropagation();
+	        }
 	    });
 	}
 </script>

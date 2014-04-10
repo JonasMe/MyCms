@@ -28,72 +28,39 @@ class __TwigTemplate_eeae9b8ec56d00625744b9b9152b3175d402e50fb2d11c284cc1083b54f
 \t</div>
 </div>
 <div class=\"tree\">
-    <ul>
-    \t";
+
+    ";
         // line 14
-        $context['_parent'] = (array) $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["pages"]) ? $context["pages"] : null));
-        foreach ($context['_seq'] as $context["_key"] => $context["page"]) {
-            // line 15
-            echo "\t        <li>\t<a href=\"#\">";
-            echo twig_escape_filter($this->env, $this->getAttribute((isset($context["page"]) ? $context["page"] : null), "title"), "html", null, true);
-            echo "</a>
-
-\t            <ul>
-\t                <li>\t<a href=\"#\">Child</a>
-
-\t                    <ul>
-\t                        <li>\t<a href=\"#\">Grand Child</a>
-
-\t                        </li>
-\t                    </ul>
-\t                </li>
-\t                <li>\t<a href=\"#\">Child</a>
-
-\t                    <ul>
-\t                        <li><a href=\"#\">Grand Child</a>
-\t                        </li>
-\t                        <li>\t<a href=\"#\">Grand Child</a>
-
-\t                            <ul>
-\t                                <li>\t<a href=\"#\">Great Grand Child</a>
-
-\t                                </li>
-\t                                <li>\t<a href=\"#\">Great Grand Child</a>
-
-\t                                </li>
-\t                                <li>\t<a href=\"#\">Great Grand Child</a>
-
-\t                                </li>
-\t                            </ul>
-\t                        </li>
-\t                        <li><a href=\"#\">Grand Child</a>
-\t                        </li>
-\t                    </ul>
-\t                </li>
-\t            </ul>
-\t        </li>
-        ";
-        }
-        $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['page'], $context['_parent'], $context['loop']);
-        $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 52
-        echo "    </ul>
+        echo (isset($context["menu"]) ? $context["menu"] : null);
+        echo "
 </div>
 <script type=\"text/javascript\">
 \tfunction TreeReady() {
+
+\t\t\$('.tree li').each(function() {
+\t\t\tif( \$(this).children('ul').length > 0 ) {
+\t\t\t\t\$(this).prepend('<span class=\"trigger glyphicon glyphicon-expand\" style=\"cursor:pointer;\"></span>');
+\t\t\t}
+\t\t});
 
 \t\t\$('.addNewPage').click(function() {
 \t\t\t\$('.helper').slideDown('slow');
 \t\t});
 
 \t    \$('.tree li li').hide();
-\t    \$('.tree li').on('click', function (e) {
-\t        var children = \$(this).find('> ul > li');
-\t        if (children.is(\":visible\")) children.hide('fast');
-\t        else children.show('fast');
-\t        e.stopPropagation();
+\t    \$('.tree li .trigger').on('click', function (e) {
+\t    \tif( \$(this).parent().children('ul').length > 0 ) {
+
+\t        \tvar children = \$(this).parent().find('> ul > li');
+\t        \tif (children.is(\":visible\")) {
+\t        \t\t\$(this).removeClass('glyphicon-collapse-down').addClass('glyphicon-expand');
+\t        \t\tchildren.hide('fast');
+\t        \t} else {
+\t        \t\t\$(this).removeClass('glyphicon-expand').addClass('glyphicon-collapse-down');
+\t        \t\tchildren.show('fast');
+\t        \t}
+\t        \te.stopPropagation();
+\t        }
 \t    });
 \t}
 </script>";
@@ -111,6 +78,6 @@ class __TwigTemplate_eeae9b8ec56d00625744b9b9152b3175d402e50fb2d11c284cc1083b54f
 
     public function getDebugInfo()
     {
-        return array (  82 => 52,  38 => 15,  34 => 14,  19 => 1,);
+        return array (  34 => 14,  19 => 1,);
     }
 }

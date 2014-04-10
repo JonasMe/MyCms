@@ -5,6 +5,8 @@
 		protected $Module;
 		protected $Main;
 
+		public $frontendOptions = false;
+
 		public function setModule($module) {
 			$this->Module = $module;
 			return $this;

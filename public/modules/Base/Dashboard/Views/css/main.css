@@ -2,6 +2,10 @@
 	padding: 0px;
 }
 
+input.transparent {
+	border: 0px;
+	background: none;
+}
 
 .mainWrapper .header {
 	background-color:#e77e22;
@@ -71,12 +75,21 @@
 }
 
 .mainWrapper .content .bar {
-	background-color: #e94c3d;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	color: #fff;
+	width: 100%;
+	padding:5px;
 }
 
+.bar.ali.dark {
+	background-color: #c1392d;
+	color:#fff;
+}
+.bar.ali {
+	background-color: #e94c3d;
+	color:#fff;
+}
+.mainWrapper .content .innerContent {
+	width: 100%;
+}
 
 
 /*Tree*/

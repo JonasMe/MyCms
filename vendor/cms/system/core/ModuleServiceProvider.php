@@ -11,11 +11,14 @@ namespace Cms\System\Core;
         $modules->registerModules();
 
         \Route::any('Module/{package}/{module}', function($package,$module) {
-                    $class  = \Input::get('class',  $module );
+                    $class  = \Input::get('class',  null );
                     $method = \Input::get('method', null );
                     $args   = \Input::get('args',   array() );
-                    $args   = ( !is_array($args) ? json_decode($args) : $args);
+                    $args   = ( !is_array($args) ? json_decode($args,true) : $args);
                     if( $mod = \Modules::get($package,$module) ) {
+                        if( is_null($class) ) {
+                            $class = $mod->getMain();
+                        }
                         return $mod->getController($class,$method,$args);
                     }
         });
@@ -23,7 +26,7 @@ namespace Cms\System\Core;
         \Route::any('Module/{package}/{module}/{class}', function($package,$module,$class) {
                     $method = \Input::get('method', null );
                     $args   = \Input::get('args',   array() );
-                    $args   = ( !is_array($args) ? json_decode($args) : $args);
+                    $args   = ( !is_array($args) ? json_decode($args,true) : $args);
                     if( $mod = \Modules::get($package,$module) ) {
                         return $mod->getController($class,$method,$args);
                     }
@@ -31,7 +34,7 @@ namespace Cms\System\Core;
 
         \Route::any('Module/{package}/{module}/{class}/{method}', function($package,$module,$class,$method) {
                     $args   = \Input::get('args',   array() );
-                    $args   = ( !is_array($args) ? json_decode($args) : $args);
+                    $args   = ( !is_array($args) ? json_decode($args,true) : $args);
 
                     if( $mod = \Modules::get($package,$module) ) {
                         return $mod->getController($class,$method,$args);
