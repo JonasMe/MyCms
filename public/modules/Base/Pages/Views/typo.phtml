@@ -1,0 +1,69 @@
+<div style="margin-top:10px; font-size:14px; margin-left:5px; margin-right:5px; border-bottom:1px solid #fff; padding-bottom:5px;">
+  <span class="addNewPage"><span class="glyphicon glyphicon-plus"></span> Tilføj side</span>
+   
+   <span class="glyphicon glyphicon-transfer" style="margin-left:20px;"></span> Eksporter
+</div>
+<div class="helper" style="margin-top:10px; font-size:14px; margin-left:5px; margin-right:5px; border-bottom:1px solid #fff; padding-bottom:5px; display:none;">
+	<div class="form-group">
+		<label>Sidenavn</label>
+		<input type="text" name="pageName" class="form-controll" />
+	</div>
+</div>
+<div class="tree">
+    <ul>
+    	{% for page in pages %}
+	        <li>	<a href="#">{{ page.title }}</a>
+
+	            <ul>
+	                <li>	<a href="#">Child</a>
+
+	                    <ul>
+	                        <li>	<a href="#">Grand Child</a>
+
+	                        </li>
+	                    </ul>
+	                </li>
+	                <li>	<a href="#">Child</a>
+
+	                    <ul>
+	                        <li><a href="#">Grand Child</a>
+	                        </li>
+	                        <li>	<a href="#">Grand Child</a>
+
+	                            <ul>
+	                                <li>	<a href="#">Great Grand Child</a>
+
+	                                </li>
+	                                <li>	<a href="#">Great Grand Child</a>
+
+	                                </li>
+	                                <li>	<a href="#">Great Grand Child</a>
+
+	                                </li>
+	                            </ul>
+	                        </li>
+	                        <li><a href="#">Grand Child</a>
+	                        </li>
+	                    </ul>
+	                </li>
+	            </ul>
+	        </li>
+        {% endfor %}
+    </ul>
+</div>
+<script type="text/javascript">
+	function TreeReady() {
+
+		$('.addNewPage').click(function() {
+			$('.helper').slideDown('slow');
+		});
+
+	    $('.tree li li').hide();
+	    $('.tree li').on('click', function (e) {
+	        var children = $(this).find('> ul > li');
+	        if (children.is(":visible")) children.hide('fast');
+	        else children.show('fast');
+	        e.stopPropagation();
+	    });
+	}
+</script>
