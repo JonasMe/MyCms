@@ -66,8 +66,6 @@ input.transparent {
 }
 
 .mainWrapper .content .subSide {
-	width:10%;
-	display:none;
 	background-color:#2d3e50;
 	padding-left: 2%;
 	padding-right: 2%;
@@ -86,6 +84,14 @@ input.transparent {
 .bar.ali {
 	background-color: #e94c3d;
 	color:#fff;
+}
+.bar.carrot {
+	background-color: #e77e22;
+	color: #fff;
+}
+.bar.carrot.dark {
+	background-color: #d25400;
+	color: #fff;
 }
 .mainWrapper .content .innerContent {
 	width: 100%;
@@ -149,3 +155,5 @@ input.transparent {
  .tree li a:hover+ul li::after, .tree li a:hover+ul li::before, .tree li a:hover+ul::before, .tree li a:hover+ul ul::before {
     border-color: #94a0b4;
 }
+.row { margin: 0px; }
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus, .nav-tabs>li>a:hover, .nav-tabs>li>a, .nav-tabs { background-color: transparent; border: 0px; }

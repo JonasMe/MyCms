@@ -29,11 +29,7 @@ class __TwigTemplate_d648fe0f5523d84530e5623ef467f4f8b55a51c4ec1fffb73f99d4bfe97
 \t<body>
 \t";
         // line 9
-        echo twig_escape_filter($this->env, call_user_func_array($this->env->getFunction('placeholder')->getCallable(), array("hej min kone")), "html", null, true);
-        echo "
-\t\t";
-        // line 10
-        echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute($this->getAttribute((isset($context["Global"]) ? $context["Global"] : null), "Website"), "Config"), "name"), "html", null, true);
+        echo call_user_func_array($this->env->getFunction('placeholder')->getCallable(), array("Dette er en test"));
         echo "
 \t</body>
 </html>";
@@ -65,6 +61,6 @@ class __TwigTemplate_d648fe0f5523d84530e5623ef467f4f8b55a51c4ec1fffb73f99d4bfe97
 
     public function getDebugInfo()
     {
-        return array (  46 => 5,  43 => 4,  36 => 10,  32 => 9,  28 => 7,  26 => 4,  21 => 1,);
+        return array (  42 => 5,  39 => 4,  32 => 9,  28 => 7,  26 => 4,  21 => 1,);
     }
 }

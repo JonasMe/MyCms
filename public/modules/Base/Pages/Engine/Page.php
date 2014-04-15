@@ -30,11 +30,6 @@
 		public function render() {
 			if( $this->pageExists ) {
 				$template = \Template::make( $this->Model->view, array("yo" => "Hej!"));
-
-				foreach( $this->Placeholders as $p ) {
-					print $p->objects()->first()->title;
-				}
-
 				return $template;
 
 			} else {
@@ -45,14 +40,21 @@
 		public function addPlaceholder($title) {
 			$placeholderSlug = strtoupper(\Str::slug($title,''));
 			try {
-				$this->Placeholders[] = Models\Placeholder::where('textual_id','like',$placeholderSlug)->firstOrFail();
+				$placeholder = Models\Placeholder::where('textual_id','like',$placeholderSlug)->firstOrFail();
+				$options = "";
+				
+				foreach( $placeholder->objects as $object ) {
+					$options .= \Modules::get('Base','Pages')->moduleOption($object,"make");
+				}
+
+				return $options;
+
 			} catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
 				$p = new Models\Placeholder();
 				$p->textual_id = $placeholderSlug;
 				$p->title = $title;
 				$p->page_id = $this->Model->page_id;
 				$this->Placeholders[] = $p->save();
-
 			}
 		}
 

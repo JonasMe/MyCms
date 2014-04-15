@@ -2,10 +2,34 @@
 	namespace Cms\System\Navigation;
 
 	class MenuItem {
+		/**
+		 * Menu item icon
+		 * @var string
+		 */
 		protected $icon;
+
+		/**
+		 * Menu item title
+		 * @var string
+		 */
 		protected $title;
+
+		/**
+		 * Menu item module
+		 * @var \Cms\System\Core\Controller
+		 */
 		protected $module;
+
+		/**
+		 * Class to fetch
+		 * @var string
+		 */
 		protected $class;
+
+		/**
+		 * Method to fetch
+		 * @var string
+		 */
 		protected $method;
 
 		protected $items;
@@ -31,7 +55,7 @@
 			return $this;
 		}
 
-		public function setModule(\Cms\System\Core\Module $module) {
+		public function setModule(\Cms\System\Core\Controller $module) {
 			$this->module = $module;
 			return $this;
 		}

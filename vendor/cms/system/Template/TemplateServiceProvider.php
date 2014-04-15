@@ -18,6 +18,7 @@
 	        \App::singleton('TemplateEngine', function() use($loader)
 	        {
 	        	return new TemplateEnviornment($loader, array(
+	        		'autoescape' => false,
 			    	'cache' => storage_path() . '/template',
 			    	'auto_reload' => true,
 				));

@@ -17,8 +17,16 @@ class __TwigTemplate_eeae9b8ec56d00625744b9b9152b3175d402e50fb2d11c284cc1083b54f
     {
         // line 1
         echo "<div style=\"margin-top:10px; font-size:14px; margin-left:5px; margin-right:5px; border-bottom:1px solid #fff; padding-bottom:5px;\">
+  <a href=\"javascript:(0);\"
+  \tajax=\"true\"
+  \tajax-package=\"Base\" 
+  \tajax-module=\"Pages\" 
+  \tajax-class=\"Dashboard\\EditPage\" 
+  \tajax-method=\"createPage\" 
+  \tajax-args=\"{}\"
+  \t>
   <span class=\"addNewPage\"><span class=\"glyphicon glyphicon-plus\"></span> Tilføj side</span>
-   
+   </a>
    <span class=\"glyphicon glyphicon-transfer\" style=\"margin-left:20px;\"></span> Eksporter
 </div>
 <div class=\"helper\" style=\"margin-top:10px; font-size:14px; margin-left:5px; margin-right:5px; border-bottom:1px solid #fff; padding-bottom:5px; display:none;\">
@@ -30,7 +38,7 @@ class __TwigTemplate_eeae9b8ec56d00625744b9b9152b3175d402e50fb2d11c284cc1083b54f
 <div class=\"tree\">
 
     ";
-        // line 14
+        // line 22
         echo (isset($context["menu"]) ? $context["menu"] : null);
         echo "
 </div>
@@ -43,9 +51,6 @@ class __TwigTemplate_eeae9b8ec56d00625744b9b9152b3175d402e50fb2d11c284cc1083b54f
 \t\t\t}
 \t\t});
 
-\t\t\$('.addNewPage').click(function() {
-\t\t\t\$('.helper').slideDown('slow');
-\t\t});
 
 \t    \$('.tree li li').hide();
 \t    \$('.tree li .trigger').on('click', function (e) {
@@ -78,6 +83,6 @@ class __TwigTemplate_eeae9b8ec56d00625744b9b9152b3175d402e50fb2d11c284cc1083b54f
 
     public function getDebugInfo()
     {
-        return array (  34 => 14,  19 => 1,);
+        return array (  42 => 22,  19 => 1,);
     }
 }

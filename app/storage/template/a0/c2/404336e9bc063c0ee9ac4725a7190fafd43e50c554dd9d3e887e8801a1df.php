@@ -31,17 +31,46 @@ class __TwigTemplate_a0c2404336e9bc063c0ee9ac4725a7190fafd43e50c554dd9d3e887e880
 \t\t<span style=\"color:#fff; font-size:48px;\" class=\"glyphicon glyphicon-cog\"></span>
 \t</div>
 </div>
-
+<div class=\"bar carrot optionpick\">
+<b>Add</b>
+ ";
+        // line 15
+        $context['_parent'] = (array) $context;
+        $context['_seq'] = twig_ensure_traversable($this->getAttribute($this->getAttribute((isset($context["Global"]) ? $context["Global"] : null), "Modules"), "allModulesSingle", array(), "method"));
+        foreach ($context['_seq'] as $context["_key"] => $context["mod"]) {
+            // line 16
+            echo " \t";
+            if (($this->getAttribute((isset($context["mod"]) ? $context["mod"] : null), "frontendOptions") != false)) {
+                // line 17
+                echo " \t\t<a href=\"javascript:void(0);\" class=\"option\" attr-package=\"";
+                echo twig_escape_filter($this->env, $this->getAttribute((isset($context["mod"]) ? $context["mod"] : null), "getPackage", array(), "method"), "html", null, true);
+                echo "\" attr-module=\"";
+                echo twig_escape_filter($this->env, $this->getAttribute((isset($context["mod"]) ? $context["mod"] : null), "getName", array(), "method"), "html", null, true);
+                echo "\">";
+                echo twig_escape_filter($this->env, $this->getAttribute((isset($context["mod"]) ? $context["mod"] : null), "getName", array(), "method"), "html", null, true);
+                echo "</a>
+ \t";
+            }
+            // line 19
+            echo " ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['mod'], $context['_parent'], $context['loop']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 20
+        echo "</div>
+<div class=\"bar carrot dark displayoptions\">
+</div>
 <div class=\"bar\">
 ";
-        // line 15
+        // line 24
         $context['_parent'] = (array) $context;
         $context['_seq'] = twig_ensure_traversable($this->getAttribute($this->getAttribute((isset($context["page"]) ? $context["page"] : null), "placeholders", array(), "method"), "get", array(), "method"));
         foreach ($context['_seq'] as $context["_key"] => $context["ph"]) {
-            // line 16
+            // line 25
             echo "\t<div class=\"panel panel-default\">
 \t      <div class=\"panel-heading\">";
-            // line 17
+            // line 26
             echo twig_escape_filter($this->env, $this->getAttribute((isset($context["ph"]) ? $context["ph"] : null), "title"), "html", null, true);
             echo "</div>
 
@@ -56,22 +85,22 @@ class __TwigTemplate_a0c2404336e9bc063c0ee9ac4725a7190fafd43e50c554dd9d3e887e880
 \t        </thead>
 \t        <tbody>
 \t        ";
-            // line 29
+            // line 38
             $context['_parent'] = (array) $context;
             $context['_seq'] = twig_ensure_traversable($this->getAttribute($this->getAttribute((isset($context["ph"]) ? $context["ph"] : null), "objects", array(), "method"), "get", array(), "method"));
             foreach ($context['_seq'] as $context["_key"] => $context["pho"]) {
-                // line 30
+                // line 39
                 echo "\t          <tr>
-\t            <td>";
-                // line 31
+\t            <td><a href=\"javascript:void(0);\" onClick=\"\$('.optionpick').slideDown('slow');\">";
+                // line 40
                 echo twig_escape_filter($this->env, $this->getAttribute((isset($context["pho"]) ? $context["pho"] : null), "placeholder_object_id"), "html", null, true);
-                echo "</td>
+                echo "</a></td>
 \t            <td>";
-                // line 32
+                // line 41
                 echo twig_escape_filter($this->env, $this->getAttribute((isset($context["pho"]) ? $context["pho"] : null), "title"), "html", null, true);
                 echo "</td>
 \t            <td>";
-                // line 33
+                // line 42
                 echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute($this->getAttribute((isset($context["pho"]) ? $context["pho"] : null), "module", array(), "method"), "get", array(), "method"), "name"), "html", null, true);
                 echo "</td>
 \t            <td>Jonas</td>
@@ -81,7 +110,7 @@ class __TwigTemplate_a0c2404336e9bc063c0ee9ac4725a7190fafd43e50c554dd9d3e887e880
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['_key'], $context['pho'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 37
+            // line 46
             echo "
 \t        </tbody>
 \t      </table>
@@ -92,46 +121,17 @@ class __TwigTemplate_a0c2404336e9bc063c0ee9ac4725a7190fafd43e50c554dd9d3e887e880
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['ph'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 43
+        // line 52
         echo "
-</div>
-
-<div class=\"bar ali dark\">
-<b>Add</b>
- ";
-        // line 48
-        $context['_parent'] = (array) $context;
-        $context['_seq'] = twig_ensure_traversable($this->getAttribute($this->getAttribute((isset($context["Global"]) ? $context["Global"] : null), "Modules"), "allModulesSingle", array(), "method"));
-        foreach ($context['_seq'] as $context["_key"] => $context["mod"]) {
-            // line 49
-            echo " \t";
-            if (($this->getAttribute($this->getAttribute((isset($context["mod"]) ? $context["mod"] : null), "getConfig", array(), "method"), "frontendOptions") != false)) {
-                // line 50
-                echo " \t\t<a href=\"javascript:void(0);\" class=\"option\" attr-package=\"";
-                echo twig_escape_filter($this->env, $this->getAttribute((isset($context["mod"]) ? $context["mod"] : null), "getPackage", array(), "method"), "html", null, true);
-                echo "\" attr-module=\"";
-                echo twig_escape_filter($this->env, $this->getAttribute((isset($context["mod"]) ? $context["mod"] : null), "getName", array(), "method"), "html", null, true);
-                echo "\">";
-                echo twig_escape_filter($this->env, $this->getAttribute((isset($context["mod"]) ? $context["mod"] : null), "getName", array(), "method"), "html", null, true);
-                echo "</a>
- \t";
-            }
-            // line 52
-            echo " ";
-        }
-        $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['mod'], $context['_parent'], $context['loop']);
-        $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 53
-        echo "</div>
-<div class=\"bar ali displayoptions\">
 </div>
 
 <script type=\"text/javascript\">
 \tfunction editPageReady() {
+\t\t\$('.displayoptions, .optionpick').hide();
+
 \t\t\$('.option').on('click',function() {
 \t\t\tvar that = this;
-\t\t\t\$.post('/Module/Base/Pages', 
+\t\t\t\$.post('/Module/Base/Pages/Pages', 
 \t\t\t\t\t{ 
 \t\t\t\t\t\t'method' : 'ajaxModuleOptions',
 \t\t\t\t\t\t'args' : 
@@ -139,7 +139,7 @@ class __TwigTemplate_a0c2404336e9bc063c0ee9ac4725a7190fafd43e50c554dd9d3e887e880
 \t\t\t\t\t\t\t\t\t\t\$(that).attr('attr-package'),
 \t\t\t\t\t\t\t\t\t\t\$(that).attr('attr-module'),
 \t\t\t\t\t\t\t\t\t]
-\t\t\t\t\t}, function(data) { \$('.displayoptions').html(data); });
+\t\t\t\t\t}, function(data) { \$('.displayoptions').html(data).slideDown('slow'); });
 \t\t});
 \t}
 </script>";
@@ -157,6 +157,6 @@ class __TwigTemplate_a0c2404336e9bc063c0ee9ac4725a7190fafd43e50c554dd9d3e887e880
 
     public function getDebugInfo()
     {
-        return array (  126 => 53,  120 => 52,  110 => 50,  107 => 49,  103 => 48,  96 => 43,  85 => 37,  75 => 33,  71 => 32,  67 => 31,  64 => 30,  60 => 29,  45 => 17,  42 => 16,  38 => 15,  22 => 2,  19 => 1,);
+        return array (  125 => 52,  114 => 46,  104 => 42,  100 => 41,  96 => 40,  93 => 39,  89 => 38,  74 => 26,  71 => 25,  67 => 24,  61 => 20,  55 => 19,  45 => 17,  42 => 16,  38 => 15,  22 => 2,  19 => 1,);
     }
 }

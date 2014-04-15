@@ -12,7 +12,7 @@
 				$this->config = Models\Site::findOrFail(1);
 				
 				//Are all modules loaded.
-				\TemplateFiles::addPath(public_path() . "/Designs/".$this->config->template);
+				\TemplateFiles::prependPath(public_path() . "/Designs/".$this->config->template);
 				\Event::fire('Website.Config.Loaded',$this->config);
 
 			} catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e) {}

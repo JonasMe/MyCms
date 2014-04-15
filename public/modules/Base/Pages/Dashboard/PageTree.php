@@ -7,12 +7,17 @@
 	use Knp\Menu\Renderer\ListRenderer;
 
 	class PageTree {
-		public function renderTree() {
+
+		protected $current;
+		
+		public function renderTree($current = null) {
+			$this->menuArray = array();
+			$this->current = $current;
 			$pages = Page::all();
 			$menu = $this->pageListRendere($pages);
-				$renderer = new ListRenderer(new Matcher());
+			$renderer = new ListRenderer(new Matcher());
 
-			return \Template::make('@Pages\typo.phtml',array("menu" => $renderer->render($menu)));
+			return $renderer->render($menu);
 		}
 
 		public function pageListRendere($pages) {
@@ -28,14 +33,15 @@
 		}
 
 		public function recursiveIteration(\Modules\Base\Pages\Models\Page $page, $item) {
-			$newItem = $item->addChild($page->title, array('uri' => 'javascript:void(0);','attributes' => array(
-		        		"content-utilize-ajax"	=> "true", 
-		        		"content-ajax"			=> "Base/Pages",
-		        		"content-class"			=> "Dashboard\\EditPage",
-		        		"content-method"		=> "edit",
-		        		"content-args"			=> json_encode( array( "id" => $page->page_id ) ), 
-		        		"content-callback"		=> "editPageReady",
-				) ) );
+			$newItem = $item->addChild(
+						$page->title,
+						array('uri' 
+									=>
+						'/admin/Base.Pages/'.urlencode('Dashboard\Pages').'/edit?args[id]='.$page->page_id ) );
+			
+			if( !is_null($this->current) && $page->page_id == $this->current ) {
+				$newItem->setCurrent(true);
+			}
 
 			$children = $page->childs();
 			if( $children->count() > 0 ) {

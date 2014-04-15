@@ -4,82 +4,85 @@ namespace Cms\System\Core;
 
  class ModuleServiceProvider extends \Illuminate\Support\ServiceProvider {
  
+    /**
+     * Boots the application and makes routes for easy module fetching
+     * @return none
+     */
     public function boot()
     {
         $modules = \App::make('Modules');
         $modules->fetchModules();
         $modules->registerModules();
 
-        \Route::any('Module/{package}/{module}', function($package,$module) {
-                    $class  = \Input::get('class',  null );
+        \Route::any('Module/{module}/{class}', function($module,$class) {
+                    if( strpos($module, ".") !== false ) {
+                    $exploded = explode(".", $module);
+                    $package = $exploded[0];
+                    $module = $exploded[1];
+                    $class  = \Input::get('class',  $class );
                     $method = \Input::get('method', null );
                     $args   = \Input::get('args',   array() );
                     $args   = ( !is_array($args) ? json_decode($args,true) : $args);
                     if( $mod = \Modules::get($package,$module) ) {
                         if( is_null($class) ) {
-                            $class = $mod->getMain();
+                            return ""; //$class = $mod->getMain();
                         }
-                        return $mod->getController($class,$method,$args);
+                        return $mod->getAdvanced($class,$method,$args);
                     }
+                }
+
         });
 
-        \Route::any('Module/{package}/{module}/{class}', function($package,$module,$class) {
-                    $method = \Input::get('method', null );
+        \Route::any('Module/{module}/{class}/{method}', function($module,$class,$method) {
+                    if( strpos($module, ".") !== false ) {
+                    $exploded = explode(".", $module);
+                    $package = $exploded[0];
+                    $module = $exploded[1];
+                    $class  = \Input::get('class',  $class );
+                    $method = \Input::get('method', $method );
                     $args   = \Input::get('args',   array() );
                     $args   = ( !is_array($args) ? json_decode($args,true) : $args);
                     if( $mod = \Modules::get($package,$module) ) {
-                        return $mod->getController($class,$method,$args);
+                        if( is_null($class) ) {
+                            return ""; //$class = $mod->getMain();
+                        }
+                        return $mod->getAdvanced($class,$method,$args);
                     }
+                }
+
         });
 
-        \Route::any('Module/{package}/{module}/{class}/{method}', function($package,$module,$class,$method) {
-                    $args   = \Input::get('args',   array() );
+        \Route::any('Module/{module}/{class}/{method}/{arguments}', function($module,$class,$method,$arguments) {
+                    if( strpos($module, ".") !== false ) {
+                    $exploded = explode(".", $module);
+                    $package = $exploded[0];
+                    $module = $exploded[1];
+                    $class  = \Input::get('class',  $class );
+                    $method = \Input::get('method', $method );
+                    $args   = \Input::get('args',   ( strpos($arguments, "/") !== false ? explode("/",$arguments) : array($arguments) ) );
                     $args   = ( !is_array($args) ? json_decode($args,true) : $args);
-
                     if( $mod = \Modules::get($package,$module) ) {
-                        return $mod->getController($class,$method,$args);
+                        if( is_null($class) ) {
+                            return ""; //$class = $mod->getMain();
+                        }
+                        return $mod->getAdvanced($class,$method,$args);
                     }
-        });
+                }
+
+        })->where('arguments', '.*');;
 
     }
  
+    /**
+     * Registers the Modules class
+     * @return none
+     */
     public function register()
     {
         \App::singleton('Modules', function()
         {
             return new \Cms\System\Core\Modules();
         });
-
-
-
-    }
- 
-    public function getModule($args)
-    {
-        $module = (isset($args[0]) and is_string($args[0])) ? $args[0] : null;
-        return $module;
-    }
-
-    public function registerModule(\Cms\System\Core\Models\Module $module) {
-        print $module->name;
-    }
-
-    public function fetchModulesAndRegister() { 
-        $allModules = \Cms\System\Core\Models\Module::where('is_active','=','1')->get();
-        foreach($allModules as $module) {
-            \Modules::register($module);
-        }
-        \Event::fire('Modules.Ready');
-    }
-
-    private function returnModuleFolder($module) {
-        if( is_dir( public_path() . "/modules/" . $module ) ) {
-            return public_path() . "/modules/" . $module;
-        } elseif( is_dir( app_path() . "/modules/" . $module ) ) {
-            return app_path() . "/modules/" . $module;
-        } else {
-            return false;
-        }
     }
  
 }

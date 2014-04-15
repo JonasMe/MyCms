@@ -1,8 +1,202 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+		<link href="{{ Global.DashboardViews }}css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+		<link href="{{ Global.DashboardViews }}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+		<link href="{{ Global.DashboardViews }}css/dashboard.css" rel="stylesheet" type="text/css" />
+	</head>
+
+	<body>
+	<div class="row fill">
+			<div class="col-lg-1 fill" id="sidePanel"></div>
+			<div class="col-lg-11 fill no-padding-left">
+				<div class="pull-left fill shadow-left" id="mainSideBar"></div>
+				<div class="pull-left" id="mainContent">hej med dig</div>
+			</div>
+			
+	</div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	<script src="{{ Global.DashboardViews }}js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="{{ Global.DashboardViews }}js/json2html.js" type="text/javascript"></script>
+	<script src="{{ Global.DashboardViews }}js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+	<script>
+
+			var jsonListRenderer =  {
+				render : function(data) {
+					var returnS = "";
+					$.each(data,function(k,f) {
+						returnS = returnS + f.module_options_id;
+					});
+
+					return returnS;
+				}
+			};
+
+			function mainSideBar(){}
+			mainSideBar.prototype = {
+				element : $('#mainSideBar'),
+				open : function(callback) {
+					if( typeof(callback) == "undefined") {
+						callback = function(){};
+					}
+					$('#mainContent').css('width','80%');
+					this.element.show().animate({ width : '20%' },1000,callback);
+				},
+				close : function(callback) {
+					if( typeof(callback) == "undefined") {
+						callback = function(){};
+					}
+					$('#mainContent').css('width','100%');
+					this.element.animate({ width : '0%' },1000,callback).hide();
+				},
+				addData : function(data, rendere) {
+					if( typeof(rendere) == "undefined" ) {
+						this.element.html(data);
+					} else {
+						this.element.html( rendere.render(data) );
+					}
+
+					return this;
+				}
+			};
+
+			function contentArea(){};
+			contentArea.prototype = {
+				element : $('#mainContent'),
+				loading : function(is) {
+					if( is == true ) {
+						this.element.html("Henter..");
+					} else {
+
+					}
+				},
+				addData : function(data, rendere) {
+					if( typeof(rendere) == "undefined" ) {
+						this.element.html(data);
+					} else {
+						this.element.html( rendere.render(data) );
+					}
+
+					return this;
+				}
+			}
+
+			function RequestTool() {}
+			RequestTool.prototype = {
+				loadedCss : [],
+				loadedJs : [],
+				fetch : function(object) {
+					var pckClass,call,method,type,arguments,success,error,dataType;
+					if( typeof(object.pckClass) == "undefined" ) {
+						console.log("Fetch requires the pckClass parameter");
+						return false;
+					} else { pckClass = object.pckClass; }
+
+					if( typeof(object.call) == "undefined" ) {
+						console.log("Fetch requires the call parameter");
+						return false;
+					} else { call = object.call; }
+
+					if( typeof(object.method) == "undefined" ) {
+						console.log("Fetch requires the method parameter");
+						return false;
+					} else { method = object.method; }
+
+					if( typeof(object.type) == "undefined" ) {
+						requestType = "post";
+					} else { requestType = object.type; }
+
+					if( typeof(object.arguments) == "undefined" ) {
+						arguments = {};
+					} else { arguments ={ args : object.arguments }; }
+
+					if( typeof(object.success) == "undefined" ) {
+						success = function(){};
+					} else { success = object.success; }
+
+					if( typeof(object.error) == "undefined" ) {
+						error = function(){};
+					} else { error = object.error; }
+
+					if( typeof(object.dataType) == "undefined" ) {
+						
+					} else { dataType = object.dataType; }
+
+					var url = "/Module/"+pckClass+"/"+encodeURIComponent(call)+"/"+method;
+					if( typeof(object.urlArguments) != "undefined") {
+						url = url + "/"+object.urlArguments;
+					}
+					var that = this;
+
+					$.ajax({
+					    url : url, type: requestType, data : arguments,
+					    success: function(data) {
+					    	var DynVar = pckClass.replace(".","_");
+					    	window[DynVar+"_"+method] = data;
+
+					    	success(data);
+
+					    	if( typeof(object.noCss) == "undefined" ) {
+						    	if( typeof(data.loadCss) != "undefined" ) {
+						    		$.each(data.loadCss,function(key,css) {
+						    		if( $.inArray(css,that.loadedCss) > -1 ) { return true; }
+						    		that.loadedCss.push(css);
+						    		$('<link/>', {
+										   rel: 'stylesheet',
+										   type: 'text/css',
+										   href: css + "?t_="+Math.floor((Math.random()*1000)+1),
+										}).appendTo('head');
+						    		});
+						    	}
+						    }
+
+						    if( typeof(object.noJs) == "undefined" ) {
+						    	if( typeof(data.loadScript) != "undefined" ) {
+						    		$.each(data.loadScript,function(key,script) {
+						    			if( $.inArray(script,that.loadedJs) > -1) { return true; }
+						    			that.loadedJs.push(script);
+						    			$.getScript( script, function() { })
+						    			.fail(function( jqxhr, settings, exception ) {
+	    									console.log("Triggered ajaxError handler. " + exception );
+												});
+						    		});
+						    	}
+					    	}
+					    },
+					    error: error,
+					    dataType : dataType,
+					});
+				}
+			}
+
+			$(function() {
+				 //s.addData({hej : "dav"},jsonListRenderer).open();
+				 request = new RequestTool();
+				 request.fetch(
+				 		{
+				 			pckClass : "Base.Pages",
+				 			call : "Dashboard\\Pages",
+				 			method : "getPages",
+				 			success : function(data) {
+				 			},
+				 		});
+			});
+	</script>
+	{{ appendJs|raw }}
+	</body>
+</html>
+{#
+<!DOCTYPE html>
+<html>
+	<head>
 		<link href="{{ Global.DashboardViews }}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 		<link href="{{ Global.DashboardViews }}css/main.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+		<link href="{{ Global.DashboardViews }}css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
 	<div class="clearfix mainWrapper">
@@ -16,70 +210,71 @@
 				</li>-->
 			</ul>
 		</div>
-		<div class="col-lg-1 sidebar">
+		<div class="col-lg-1 sidebar fullHeight">
 		<ul>
 
-			{% for item in sidebar.getAll %}
-		        <li 
-		        	{% if item.getCustom('sitebarAjax') != false %}
-		        		sidebar-utilize-ajax="true" 
-		        		sidebar-ajax="{{ item.getModule.getPackage }}/{{ item.getModule.getName }}" 
-		        		sidebar-class="{{ item.getCustom('sitebarAjax').class }}" 
-		        		sidebar-method="{{ item.getCustom('sitebarAjax').method }}" 
-		        		sidebar-args="{{ item.getCustom('sitebarAjax').args|json_encode() }}" 
-		        		sidebar-callback="{{ item.getCustom('ajaxCallback') }}"
-		        	{% endif %}
-		        >
-		        	<div>
-		        	<span class="glyphicon glyphicon-{{ item.getIcon }}"></span>
-		        	{{ item.getTitle }}
-		        	</div>
-		        </li>
-		    {% endfor %}
+			{{ sidebar|raw }}
 
 		</ul>
 
 		</div>
-		<div class="col-lg-11 content">
-			<div class="subSide pull-left"></div>
-			<div class="innerContent pull-left minusbar">
-				<div class="bar" >Hej med dig kaj</div>
-			</div>
+		<div class="col-lg-11 content fullHeight">
+				{{ content|raw }}
 		</div>
 	</div>
 
 	<!--Javascript-->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<script src="{{ Global.DashboardViews }}js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="{{ Global.DashboardViews }}js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+	{{ appendJs|raw }}
 	<script type="text/javascript">
-		function sizeHeight() {
-		$('.mainWrapper .sidebar, .mainWrapper .content, .mainWrapper .subSide')
-			.height( parseInt($(window).height()) - parseInt($('.mainWrapper .header').height() ) );
-		}
-		function initContentCalls() {
-			$('[content-utilize-ajax="true"]').each(function() {
-				var call 		= $(this).attr('content-ajax');
-				var clasS 		= $(this).attr('content-class');
-				var method 		= $(this).attr('content-method');
-				var args 		= $(this).attr('content-args');
-				var callback 	= $(this).attr('content-callback');
-				var selector	= this;
-				if( $(this).find('>a').length > 0 ) {
-					selector = $(this).children('a');
-				}
-				$(selector).on('click',function() {
-					contentLoading(true);
+
+	function dashboardAjax() {}
+
+	dashboardAjax.prototype = {
+
+		reloadAjaxHandlers : function() {
+		var $this 					= this;
+			$('[ajax="true"]').each(function() {
+				var callPackage 	= $(this).attr('ajax-package');
+				var callModule		= $(this).attr('ajax-module');
+				var callClass 		= $(this).attr('ajax-class');
+				var callMethod 		= $(this).attr('ajax-method');
+				var callArgs 		= $(this).attr('ajax-args');
+				var triggerEvent 	= $(this).attr('ajax-callbackFunc');
+				var selector		= $(this).attr('ajax-selector');
+				var injectat		= $(this).attr('ajax-inject-at');
+				var container;
+				if( typeof(selector) == "undefined" || selector == "" ) { selector = $(this); }
+					else { selector = $(this).find(selector); }
+
+				if( typeof(callArgs) == "undefined" || callArgs == "" ) { callArgs = {}; }
+
+				if( typeof(injectat) == "undefined" || injectat == "" ) { container = $(".innerContent"); }
+					else { container = $(injectat); }
+
+				$(selector).on('click',function(e) {
+					e.preventDefault();
+					if( injectat == ".innerContent" ) { contentLoading(true); }
 					$.ajax({
-					    url : "/Module/"+call,
+					    url : "/Module/"+callPackage+"/"+callModule,
 					    type: "POST",
-					    data : { "class" : clasS, "method" : method, args : args},
+					    data : {  "class" : callClass, "method" : callMethod, args : callArgs },
 					    success: function(data)
 					    {
-					    	$('.innerContent').html(data);
-					    	contentLoading(false);
-					    	if( callback != "" ) { eval(callback+"()"); }
+					    	container.html(data);
+					    	if( injectat == ".innerContent" ) { contentLoading(false); }
+					    		else if(injectat == ".subSide" ) {
+					    			openSideBar();
+					    		}
 
-					        
+							if( typeof(triggerEvent) == "undefined" || triggerEvent == "" ) { }
+								else {
+									eval(triggerEvent+"();");
+								}
+							$this.reloadAjaxHandlers();
 					    },
 					    error: function (jqXHR)
 					    {
@@ -91,82 +286,25 @@
 			});
 		}
 
-		function openSideBar() {
-			$('.minusbar').each(function() {
-				$(this).css('width','80%');
-			});
+	}
 
-			$('.subSide').show().css('width','0%').animate({ 'width' : '20%' }, 1000);
-		}
-
-		function contentLoading(show) {
-			obj = $('.content .iAmLoading');
-			if( obj.length > 0 && show == false) {
-				obj.fadeOut('slow');
-			} else {
-				if( obj.length > 0 && show == true) {
-					obj.fadeIn('slow');
-				} else {
-					var overlay = $('<div></div>').hide().css(
-							{ 
-								'position' : 'absolute',
-								'background-color' : 'rgba(0,0,0,0.5)',
-								'top' : '0px',
-								'bottom' : '0px',
-								'left' : '0px',
-								'right' : '0px' }).addClass('iAmLoading').prependTo('.content');
-					var msg = $('<div></div>').html('Vent venligst..').css(
-									{ 
-										'color' : '#fff',
-										'position' : 'fixed',
-										'top' : '50%',
-										'left' : '50%',
-										}).appendTo(overlay);
-					msg.css({'margin-top' : '-'+(msg.height()/2),
-										'margin-left' : '-'+(msg.width()/2) })
-				overlay.fadeIn('slow');
-				}
-			}
-		}
-		$(function() {
-			initContentCalls();
-
-		$('.mainWrapper .sidebar, .mainWrapper .content, .mainWrapper .subSide')
+		function sizeHeight() {
+		$('.fullHeight')
 			.height( parseInt($(window).height()) - parseInt($('.mainWrapper .header').height() ) );
+		}
+
+		$(function() {
+			db = new dashboardAjax;
+				db.reloadAjaxHandlers();
+				sizeHeight();
+
+			    $('.datepicker').datetimepicker({
+			      language: 'da'
+			    });
 
 			$(window).resize(function() { sizeHeight(); });
-
-			$('.sidebar li[sidebar-utilize-ajax="true"]').each(function() {
-				var call 		= $(this).attr('sidebar-ajax');
-				var clasS 		= $(this).attr('sidebar-class');
-				var method 		= $(this).attr('sidebar-method');
-				var args 		= $(this).attr('sidebar-args');
-				var callback 	= $(this).attr('sidebar-callback');
-
-				$(this).click(function() {
-					$.ajax({
-					    url : "/Module/"+call,
-					    type: "POST",
-					    data : { "class" : clasS, "method" : method, args : args},
-					    success: function(data)
-					    {
-					    	$('.subSide').html(data);
-					    	if( callback != "" ) { eval(callback+"()"); }
-					    	initContentCalls();
-					    	
-					    	openSideBar();
-					        
-					    },
-					    error: function (jqXHR)
-					    {
-					 
-					    }
-					});
-				});
-
-			});
 
 		});
 	</script>
 	</body>
-</html>
+</html>#}
