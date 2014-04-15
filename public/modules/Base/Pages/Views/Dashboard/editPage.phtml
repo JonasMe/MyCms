@@ -1,0 +1,170 @@
+<div class="bar ali dark">
+	<div>
+	  <a href="javascript:void(0);" onClick="$('.pageSave').submit();">
+	  	<span class="glyphicon glyphicon-floppy-saved"></span> Gem
+	  </a>
+	  <a href="#">
+	  	<span class="glyphicon glyphicon-remove-circle"></span> Annuler
+	  </a>
+	</div>
+</div>
+
+<div class="bar ali">
+	<ul class="nav nav-tabs">
+	  <li class="active">
+		  	<a href="#home" data-toggle="tab">
+		  		<span style="color:#fff; font-size:48px;" class="glyphicon glyphicon-list-alt"></span>
+		  	</a>
+	  </li>
+	  <li class="">
+		  	<a href="#settings" data-toggle="tab">
+		  		<span style="color:#fff; font-size:48px;" class="glyphicon glyphicon-cog"></span>
+		  	</a>
+	  </li>
+	</ul>
+</div>
+
+
+<div class="bar carrot optionpick">
+<b>Add</b>
+ {% for mod in Global.Modules.allModulesSingle() %}
+ 	{% if mod.frontendOptions != false %}
+ 		<a href="javascript:void(0);" class="option" attr-package="{{ mod.getPackage() }}" attr-module="{{ mod.getName() }}">{{ mod.getName() }}</a>
+ 	{% endif %}
+ {% endfor %}
+</div>
+<div class="bar carrot dark displayoptions">
+</div>
+<div class="bar">
+
+<div class="tab-content">
+  <div class="tab-pane active" id="home">
+		{% for ph in page.placeholders().get() %}
+			<div class="panel panel-default">
+			      <div class="panel-heading">{{ ph.title }}</div>
+
+			      <table class="table">
+			        <thead>
+			          <tr>
+			            <th>#</th>
+			            <th>Navn</th>
+			            <th>Modul</th>
+			            <th>Oprettet af</th>
+			          </tr>
+			        </thead>
+			        <tbody class="sortable" id="ph{{ ph.placeholder_id }}">
+			        {% for pho in ph.objects().get() %}
+			          <tr id="object{{ pho.placeholder_object_id }}">
+			            <td><a href="javascript:void(0);" onClick="$('.optionpick').slideDown('slow');">{{ pho.placeholder_object_id }}</a></td>
+			            <td><a href="/admin/Base.Pages/Dashboard%5CPages/placeholder/{{ ph.placeholder_id }}/{{ pho.placeholder_object_id }}?option={{ pho.module_option_id }}">{{ pho.title }}</a></td>
+			            <td>{{ pho.module().get().name }}</td>
+			            <td>Jonas</td>
+			          </tr>
+			        {% endfor %}
+
+			        </tbody>
+			      </table>
+
+			</div>
+		{% endfor %}
+  </div>
+  <div class="tab-pane" id="settings">
+			<form action="" method="post" class="pageSave">
+			<div class="row">
+				<div class="form-group col-lg-6">
+					  <label class="control-label" for="title">Titel</label>
+					  <div class="controls">
+					    <input id="title" name="title" type="text" placeholder="Sidens titel" class="input-xlarge form-control" required="" value="{{ page.title }}">
+					  </div>
+				</div>
+			</div>
+
+				<!-- Text input-->
+				<div class="row">
+					<div class="form-group col-lg-6">
+					  <label class="control-label" for="slug">Sidens url</label>
+					  <div class="controls">
+					    <input id="slug" name="slug" type="text" placeholder="Indtast sidens URL her" class="input-xlarge form-control" required="" value="{{ page.slug }}">
+					    
+					  </div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="form-group col-lg-6">
+					<label class="control-label" for="activeFrom">Aktiv fra</label>
+					  <div class="datepicker input-append date input-group">
+					    <input data-format="dd/MM/yyyy hh:mm:ss" name="activeFrom" type="text" class="form-control"></input>
+					    <span class="add-on input-group-addon">
+					      <i data-time-icon="glyphicon glyphicon-time" data-date-icon="glyphicon glyphicon-calendar">
+					      </i>
+					    </span>
+					  </div>
+					 </div>
+				</div>
+
+				<div class="row">
+					<div class="form-group col-lg-6">
+					<label class="control-label" for="activeFrom">Aktiv til</label>
+					  <div class="datepicker input-append date input-group">
+					    <input data-format="dd/MM/yyyy hh:mm:ss" name="activeTo" type="text" class="form-control"></input>
+					    <span class="add-on input-group-addon">
+					      <i data-time-icon="glyphicon glyphicon-time" data-date-icon="glyphicon glyphicon-calendar">
+					      </i>
+					    </span>
+					  </div>
+					 </div>
+				</div>
+			
+	      </div>
+
+	        </form>
+  </div>
+</div>
+
+
+</div>
+
+<div class="modal fade" id="editPage" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Rediger {{ page.title }}</h4>
+      </div>
+      <div class="modal-body">
+		<form action="" method="post">
+			<div class="control-group">
+			  <label class="control-label" for="title">Titel</label>
+			  <div class="controls">
+			    <input id="title" name="title" type="text" placeholder="Sidens titel" class="input-xlarge form-control" required="" value="{{ page.title }}">
+			    
+			  </div>
+			</div>
+
+			<!-- Text input-->
+			<div class="control-group">
+			  <label class="control-label" for="slug">Sidens url</label>
+			  <div class="controls">
+			    <input id="slug" name="slug" type="text" placeholder="Indtast sidens URL her" class="input-xlarge form-control" required="" value="{{ page.slug }}">
+			    
+			  </div>
+			</div>
+
+			  <div class="datepicker input-append date">
+			    <input data-format="dd/MM/yyyy hh:mm:ss" type="text"></input>
+			    <span class="add-on">
+			      <i data-time-icon="glyphicon glyphicon-time" data-date-icon="glyphicon glyphicon-calendar">
+			      </i>
+			    </span>
+			  </div>
+		
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Afslut</button>
+        <button type="submit" class="btn btn-primary">Gem</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
