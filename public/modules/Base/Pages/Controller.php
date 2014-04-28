@@ -24,18 +24,19 @@
 
 			\Template::addFunction($Func2);
 
-			if( $dashBoard = \Modules::get('Base','Dashboard') ) {
-				$this->addDashboardElements($dashBoard);
-			}
-
 			/* Setting up routes. Wer being nice to other modules so well set them last in the bootchain. */
+			\Route::any('/', function() {
+				return $this->get('Pages')->initPage();
+			});
+
 			\Route::any('{pageName}', function($slug) {
 				return $this->get('Pages')->initPage($slug);
 			});
 
+
 		}
 
-		public function moduleOption($object,$action = "make") {
+		public function moduleOption($object) {
 				$option = $object->option;
 				$placeholder = $object->placeholder;
 
@@ -48,15 +49,8 @@
 				$optClass->setPlaceholder($placeholder)
 							->setObject($object)
 							->setProperties($props);
-				if( $action == "edit" ) {
-					return $optClass->edit();
-				} 
 
-				return $optClass->make();
+				return $optClass;
 		}
 
-		private function addDashboardElements($dashBoard) {
-				$sideMenu = $dashBoard->getSideMenu();
-				$sideMenu->addChild("Pages", array('uri' => '/admin/Base.Pages/'.urlencode('Dashboard\Pages').'/index')  );
-		}
 	}

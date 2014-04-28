@@ -29,4 +29,10 @@
 	        return $response;
 	    }
 
+	    public static function javascriptView($content) {
+			$response = \Response::make($content);
+			$response->header('Content-Type', 'text/javascript');
+	        return $response;
+	    }
+
 	}

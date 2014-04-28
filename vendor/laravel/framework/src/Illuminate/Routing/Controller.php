@@ -66,6 +66,7 @@ abstract class Controller {
 	 */
 	protected function parseFilter($filter, array $options)
 	{
+
 		$parameters = array();
 
 		$original = $filter;
@@ -80,6 +81,7 @@ abstract class Controller {
 		}
 		else
 		{
+			print $filter." - - - ";
 			list($filter, $parameters) = Route::parseFilter($filter);
 		}
 
@@ -128,6 +130,8 @@ abstract class Controller {
 
 			throw new \InvalidArgumentException("Filter method [$filter] does not exist.");
 		}
+
+
 
 		return false;
 	}

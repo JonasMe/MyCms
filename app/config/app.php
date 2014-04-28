@@ -52,7 +52,8 @@ $appConfig = array(
 	|
 	*/
 
-	'locale' => 'en',
+	'locale' => 'da',
+	'fallback_locale' => 'en',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -106,6 +107,8 @@ $appConfig = array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
+		'Jonm\Pario\ParioServiceProvider',
+		'Cms\System\User\UserServiceProvider',
 		'Cms\System\Core\ModuleServiceProvider',
 		'Cms\System\Template\TemplateServiceProvider',
 	),
@@ -172,7 +175,9 @@ $appConfig = array(
 		'Str'             => 'Illuminate\Support\Str',
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
+		'User'	  		  => 'Cms\System\User\Facade\UserFacade',
 		'View'            => 'Illuminate\Support\Facades\View',
+		'Pario'			  => 'Jonm\Pario\ParioFacade',
 		'Modules'		  => 'Cms\System\Core\Facades\ModulesFacade',
 		'Template'		  => 'Cms\System\Template\Facade\Template',
 		'TemplateFiles'	  => 'Cms\System\Template\Facade\TemplateFiles',

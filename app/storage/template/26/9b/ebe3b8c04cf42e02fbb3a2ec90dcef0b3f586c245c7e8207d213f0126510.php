@@ -41,7 +41,7 @@ class __TwigTemplate_269bebe3b8c04cf42e02fbb3a2ec90dcef0b3f586c245c7e8207d213f01
     <style type=\"text/css\">
         .important { color: #336699; }
     </style>
-   
+    
 ";
     }
 

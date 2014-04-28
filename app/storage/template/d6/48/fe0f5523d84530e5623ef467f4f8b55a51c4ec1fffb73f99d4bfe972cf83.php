@@ -31,6 +31,18 @@ class __TwigTemplate_d648fe0f5523d84530e5623ef467f4f8b55a51c4ec1fffb73f99d4bfe97
         // line 9
         echo call_user_func_array($this->env->getFunction('placeholder')->getCallable(), array("Dette er en test"));
         echo "
+\t<hr>
+\t";
+        // line 11
+        echo call_user_func_array($this->env->getFunction('placeholder')->getCallable(), array("hej"));
+        echo "
+
+\t<div style=\"width:800px; margin:0 auto;\">
+\t\t";
+        // line 14
+        echo call_user_func_array($this->env->getFunction('placeholder')->getCallable(), array("Jussi adler"));
+        echo "
+\t</div>
 \t</body>
 </html>";
     }
@@ -61,6 +73,6 @@ class __TwigTemplate_d648fe0f5523d84530e5623ef467f4f8b55a51c4ec1fffb73f99d4bfe97
 
     public function getDebugInfo()
     {
-        return array (  42 => 5,  39 => 4,  32 => 9,  28 => 7,  26 => 4,  21 => 1,);
+        return array (  54 => 5,  51 => 4,  43 => 14,  37 => 11,  32 => 9,  28 => 7,  26 => 4,  21 => 1,  38 => 4,  35 => 3,  29 => 2,);
     }
 }

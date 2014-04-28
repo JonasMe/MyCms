@@ -3,17 +3,20 @@
 
 	class RichText extends \Modules\Base\Pages\Engine\Option {
 
+
 		public function edit() {
-			\Template::appendJs('<script src="'.\Modules::get('Base','Pages')->getViewFolder().'ckeditor/ckeditor.js"></script>');
-			\Template::appendJs('<script type="text/javascript">$(function() { CKEDITOR.replace( "pageText" );
- });</script>');
+			return \Template::make('@Pages\Options/editRichText.phtml', array("random" => rand(0,99999), "text" => ( $this->getProperty("text") ? $this->getProperty("text") : "")));
+		}
 
-			$txt = \Input::get('text',null);
-			if( !is_null($txt) ) {
-				$this->property("text",$txt);
+		public function save() {
+			$text = \Input::get('text',null);
+
+			if( !is_null($text) ) {
+					$this->property("text",$text);
+					return true;
+			} else {
+				return "No textfield specified.";
 			}
-
-			return \Template::make('@Pages\Options/editRichText.phtml', array("text" => ( $this->getProperty("text") ? $this->getProperty("text") : "")));
 		}
 
 		public function make() {

@@ -1,62 +1,41 @@
 <?php
 	namespace Modules\Base\Dashboard;
-	use Knp\Menu\MenuFactory;
 
 	class Controller extends \Cms\System\Core\Controller {
 
-		protected $sideMenu;
+
+		public function loginOrRedirect() {
+			if( \User::isLoggedIn() ) {} else { 
+				\Session::put('url',\Request::url() );
+				header("location: /admin/login");
+				die();
+			}
+		}
 
 		public function register() {
-			$factory = new MenuFactory();
-			$this->sideMenu = $factory->createItem('sideMenu');	
 
 			\Route::any('admin', function() {
+				$this->loginOrRedirect();
 				return $this->get('Dashboard')->index();
 			});
 
-	        \Route::any('admin/{module}/{class}/{method}', function($module,$class,$method) {
-	                    if( strpos($module, ".") !== false ) {
-	                    $exploded = explode(".", $module);
-	                    $package = $exploded[0];
-	                    $module = $exploded[1];
-	                    $class  = \Input::get('class',  $class );
-	                    $method = \Input::get('method', $method );
-	                    $args   = \Input::get('args',   array() );
-	                    $args   = ( !is_array($args) ? json_decode($args,true) : $args);
+			\Route::get('admin/login',function() {
+				return \Template::make('@Dashboard\login.phtml', array( "url" => \Session::get('url','admin') ) );
+			});
 
-	                    if( $mod = \Modules::get($package,$module) ) {
-	                        if( is_null($class) ) {
-	                            return ""; //$class = $mod->getMain();
-	                        }
-	                        $dashboard = $this->get('Dashboard');
-	                        return $dashboard->index( $mod->getAdvanced($class,$method,$args) );
-	                    }
-	                }
+			\Route::post('admin/login',function() {
+				if( \User::check( \Input::get('email',null),\Input::get('password',null),true) === true ) {
+					return \Redirect::to( \Input::get('redirect','admin') );
+				} else {
+					$this->loginOrRedirect();
+				}
+			});
 
-	        });
-
-	        \Route::any('admin/{module}/{class}/{method}/{arguments}', function($module,$class,$method,$arguments) {
-	                    if( strpos($module, ".") !== false ) {
-	                    $exploded = explode(".", $module);
-	                    $package = $exploded[0];
-	                    $module = $exploded[1];
-	                    $class  = \Input::get('class',  $class );
-	                    $method = \Input::get('method', $method );
-	                    $args   = \Input::get('args',   ( strpos($arguments, "/") !== false ? explode("/",$arguments) : array($arguments) ) );
-	                    $args   = ( !is_array($args) ? json_decode($args,true) : $args);
-
-	                    if( $mod = \Modules::get($package,$module) ) {
-	                        if( is_null($class) ) {
-	                            return ""; //$class = $mod->getMain();
-	                        }
-	                        $dashboard = $this->get('Dashboard');
-	                        return $dashboard->index( $mod->getAdvanced($class,$method,$args) );
-	                    }
-	                }
-
-	        })->where('arguments','.*');
-	        
-                    
+			\Route::get('admin/logout',function() {
+				$this->loginOrRedirect();
+				\User::clear();
+				return \Redirect::to( "admin/login" );
+			});
 
 		}
 
@@ -65,5 +44,18 @@
 		}
 
 		public function boot() {
+		
 		}
+		
+		public function Auth( $permissions = array() ) {
+
+			if( \User::isLoggedIn() !== true ) {
+				if ( \Request::ajax()  ) {
+					die( json_encode( array("Error" => true, "Message" => "Login" ) ) );
+				} else {
+					\Redirect::to('admin/login')->send();
+				}
+			}
+		}
+
 	}

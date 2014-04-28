@@ -7,10 +7,10 @@
 
 	class Pages {
 
-		public $pageTree;
-		protected $tree;
+		//public $pageTree;
+		//protected $tree;
 
-		public function ready() {
+		/*public function ready() {
 
 			$args = \Input::get('args',null);
 			$current = ( isset( $args['id'] ) && is_numeric($args['id']) ? $args['id'] : null );
@@ -19,14 +19,124 @@
 			\Template::appendJs('<script type="text/javascript" src="'.$this->controller->getViewFolder().'js/pagetree.js"></script>');
 			\Template::addGlobal('menu', $this->pageTree);
 		}
-
 		public function index() {
 			return \Template::make('@Pages/Dashboard/index.phtml');
 		}
+		*/
+		private $_mcData;
+		public $directCalling = true;
+		public function __construct() {
+				$this->_mcData = array("Error" => true, "Message" => "Missing login credentials");
+		}
+
+		public function checkLogin() {
+			\Modules::get('Base','Dashboard')->Auth();
+		}
+
+		public function moduleOptions() {
+			$this->checkLogin();
+			$data = array();
+
+			foreach (\Modules::allModuleOptions() as $mo ) {
+				$data[] = array( "title" => $mo->title, "id" => $mo->module_option_id );
+			}
+
+
+			if ( \Request::ajax() || !\Request::ajax() ) {
+				return \Template::jsonView( $data );
+			} else {
+				return "Only ajax";
+			}
+
+		}
+
+		public function updateMultiple($page = null) {
+			$this->checkLogin();
+				$error = false;
+				$keys 		= array( 
+										"title" 		=> "title",
+										"frontpage" 	=> "is_frontpage",
+										"slug" 			=>  "slug",
+										"active" 		=> "is_active",
+										"view" 			=> "view",
+									);
+
+				$details = \Input::all();
+				$details = ( !empty($details) ? $details : array() );
+
+				if( is_numeric($page) ) {
+					$obj = Page::find($page);
+				} elseif( is_null($page) ) {
+					$obj = new Page;
+				} else {
+					$error = true;
+				}
+
+			if( $error === false ) {
+				foreach( $details as $key => $value ) {
+					
+					if( isset( $keys[$key] ) ) {
+						$obj->{$keys[$key]} = $value;
+					}
+				}
+				$obj->save();
+				$data = array("Error" => false, "Message" => "Page updated", "id" => $obj->page_id);
+			} else {
+				$data = array("Error" => true, "Message" => "Page must be numeric");
+			}
+
+			if ( \Request::ajax() || !\Request::ajax() ) {
+				return \Template::jsonView( $data );
+			} else {
+				return "Only ajax";
+			}
+
+		}
+
+		public function update($page,$key) {
+			$this->checkLogin();
+			if( is_numeric($page) ) {
+				$keys 		= array( 
+										"title" 		=> "title",
+										"frontpage" 	=> "is_frontpage",
+										"slug" 			=>  "slug",
+										"active" 		=> "is_active",
+										"view" 			=> "view",
+									);
+
+
+				if( isset($keys[$key]) ) {
+					$obj = Page::find($page);
+					if( $obj ) {
+						if( \Input::has('value') ) {
+							$obj->{$keys[$key]} = \Input::get('value', $obj->{$keys[$key]});
+							$obj->save();
+							$data = array("Error" => false, "Message" => "Page updated");
+						} else {
+							$data = array("Error" => true, "Message" => "Value not set");
+						}
+					} else {
+						$data = array("Error" => true, "Message" => "Page not found");
+					}
+				} else {
+					$data = array("Error" => true, "Message" => "Invalid key '".$key."'. Keys available: " . implode(",", array_keys($keys) ) );
+				}
+			} else {
+				$data = array("Error" => true, "Message" => "Page must be numeric");
+			}
+
+			if ( \Request::ajax() || !\Request::ajax() ) {
+				return \Template::jsonView( $data );
+			} else {
+				return "Only ajax";
+			}
+
+		}
+
 
 		//functionality
 		public function getPages($parent = null) {
-
+			$this->checkLogin();
 			$pages = null;
 			if( is_null($parent) ) {
 				$pages = Page::where('parent_id','=',0)->get();
@@ -40,6 +150,7 @@
 
 
 			if ( \Request::ajax() ) {
+				$l = $this->controller->_l('default');
 
 				$arr = array();
 				foreach( $pages as $p ) {
@@ -50,9 +161,14 @@
 					);
 				}
 
-				$data = array("menu" => $arr);
+				$data = array(
+								"menu" => $arr,
+								"l" => $l,
+							);
 				if( is_null($parent) ) {
-					$data["loadScript"]		= array( $this->controller->getViewFolder().'js/dashboard.pagenavigation.js' );
+					$data["loadScript"]		= array( 
+														$this->controller->getViewFolder().'js/dashboard.pagenavigation.js'
+													);
 					$data["loadCss"]		= array( $this->controller->getViewFolder().'css/pagetree.css');
 				}
 				return \Template::jsonView($data);
@@ -62,14 +178,54 @@
 			}
 		}
 
+		public function getViews() {
+			$this->checkLogin();
+				$website = \Modules::get('Base','Website');
+				if( $website !== false ) {
+					$send = array();
+					foreach( $website->getTemplateViews() as $v ) {
+						$send[] = array("view" => $v);
+					}
+					$data['templateViews'] = $send;
+				}
+
+			if ( \Request::ajax() || !\Request::ajax() ) {
+				return \Template::jsonView($data);
+			} else {
+				return "Only ajax";
+			}
+		}
+
 		public function editPage($id) {
+			$this->checkLogin();
 			if( is_numeric($id) ) {
 				$page = Page::find($id);
+				
+				//Load new placeholders
+				try {
+					\Modules::get('Base','Pages')->get('Pages')->CurrentPage =  new \Modules\Base\Pages\Engine\Page($page);
+					\Template::make( $page->view, array("yo" => "Hej!"));
+				} catch(\Twig_Error_Loader $e) {}
+
 				$data = $page->toArray();
+
+				$website = \Modules::get('Base','Website');
+				if( $website !== false ) {
+					$send = array();
+					foreach( $website->getTemplateViews() as $v ) {
+						$send[] = array("view" => $v);
+					}
+					$data['templateViews'] = $send;
+
+				}
+
 				$placeholders = $page->placeholders()->get();
 				foreach( $placeholders as $p ) {
 					$ph = $p->toArray();
-					$ph['objects'][] = $p->objects()->get()->toArray();
+					$objs = $p->objects();
+					if( $objs->count() > 0 ) {
+						$ph['objects'] = $objs->get()->toArray();
+					}
 					$data['placeholders'][] = $ph;
 				}
 
@@ -133,14 +289,6 @@
 
 
 			return \Template::make('@Pages\Dashboard/placeholderObject.phtml',$pass);
-		}
-
-		public function setObjectPlaceholder($object,$placeholder) {
-			if( is_numeric($object) && is_numeric($placeholder) ) {
-				$object = PlaceholderObject::find($object);
-				$object->placeholder_id = $placeholder;
-				$object->save();
-			}
 		}
 
 		public function setPositions() {

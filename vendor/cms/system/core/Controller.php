@@ -52,6 +52,12 @@
 		protected $calledControllers;
 
 		/**
+		 * Module language
+		 * @var Translator
+		 */
+		protected $language;
+
+		/**
 		 * Variable for determining if there are any options or not.
 		 * @var boolean
 		 */
@@ -69,11 +75,18 @@
 				return $this->calledControllers[ucfirst($controller)];
 			} else {
 				$loadC = sprintf($this->generatedNamespace ."\\%s",$controller);
-				$load = new $loadC;
-				$load->controller = $this;
-				if( method_exists($load, 'ready') ) { $load->ready(); }
-				$this->calledControllers[ucfirst($controller)] = $load;
-				return $load;
+
+					if(!class_exists($loadC) ) {
+						return false;
+					}
+
+					$load = new $loadC;
+
+					$load->controller = $this;
+					if( method_exists($load, 'ready') ) { $load->ready(); }
+					$this->calledControllers[ucfirst($controller)] = $load;
+					return $load;
+
 			}
 		}
 
@@ -96,14 +109,30 @@
 				if( is_null($method) ) {
 					throw new \Exception("No method specified.");
 				} else {
-	             $module = sprintf($this->generatedNamespace ."\\%s",$class);
-	             $class  = new $module;
+					if( !is_object($class) ) {
+			             $module = sprintf($this->generatedNamespace ."\\%s",$class);
+			             $class  = new $module;
+			        }
 	             $class->controller = $this;
+
 	             if( method_exists($class, 'ready') ) { $class->ready(); }
 
 	             return call_user_func_array(array($class, $method), $args);
 	            }
             }
+		}
+
+		/**
+		 * Uninstall module
+		 * @return boolean
+		 */
+		public function uninstall() {
+			if( $installer = $this->get("Installer") ) {
+				$installer->setModule($this->dbModel)->doUninstall();
+				return true;
+			}
+
+			return false;
 		}
 
 		/**
@@ -168,6 +197,15 @@
 			$this->dbModel = $model;
 			return $this;
 		}
+		
+		/**
+		 * Sets the language
+		 * @param IlluminateTranslationTranslator $language
+		 */
+		public function setLanguage(\Illuminate\Translation\Translator $language) {
+			$this->language = $language;
+			return $this;
+		}
 
 		/**
 		 * Gets the systemName variable
@@ -226,6 +264,24 @@
 		}
 
 		/**
+		 * Gets the language
+		 * @return IlluminateTranslationTranslator
+		 */
+		public function getLanguage() {
+			return $this->language;
+		}
+
+		/**
+		 * Helper function for getLanguage
+		 * @param  string $line
+		 * @param  array  $replace
+		 * @return string
+		 */
+		public function _l( $line,$replace = array() ) {
+			return $this->language->get($line,$replace);
+		}
+
+		/**
 		 * Initializing this
 		 * @return none
 		 */
@@ -236,4 +292,8 @@
 		 * @return none
 		 */
 		public function boot() { }
+
+		public function __call($name,$arguments) {
+			$this->get($this->systemName, $name, $arguments);
+		}
 	}

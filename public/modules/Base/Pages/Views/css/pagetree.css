@@ -9,11 +9,15 @@ ul.tree li {
     margin: 0px;
     padding: 0px;
     list-style: none;
-    padding:5px;
 }
+
+ul.tree > li { padding:5px; }
 
 ul.tree li:hover {
     background-color: #ecf0f1;
+}
+ul.tree li:hover > a {
+    text-decoration: underline;
 }
 
 ul.tree li a, ul.tree li a:hover {
@@ -24,3 +28,26 @@ ul.tree li a, ul.tree li a:hover {
 ul.tree li a .expander {
     margin-right: 5px;
 }
+
+#mainContent .pages_edit_placeholders {
+    padding-left:10px;
+    padding-right: 10px;
+    margin-top: 10px;
+}
+
+#mainContent .pages_edit_placeholders .iAmSortable {
+    min-height: 10px;
+}
+#mainContent .pages_edit_placeholders a * {
+    cursor:pointer;
+}
+#mainContent .pages_edit_placeholders a.list-group-item.active,
+#mainContent .pages_edit_placeholders a.list-group-item.active:hover,
+#mainContent .pages_edit_placeholders a.list-group-item.active:focus {
+    background-color: #ecf0f1;
+    border: 1px solid #ddd;
+    color: #7f8c8d;
+    font-weight: normal;
+}
+
+#DashboardModal form.save { margin: 0px; }

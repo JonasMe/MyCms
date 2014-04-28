@@ -1,0 +1,10 @@
+function func{{ token }}() {};
+func{{ token }}.prototype = {
+	data : data_{{ token }},
+	container : function() {
+		{{ fileContent }}
+	}
+};
+
+var Holder{{ token }} = new func{{ token }};
+Holder{{ token }}.container();

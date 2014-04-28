@@ -1,3 +1,14 @@
 	<textarea id='pageText' name="text">
 			{{ text }}
 	</textarea>
+
+	<script type="text/javascript">
+
+	$(function() { 
+			Request.loadScript("{{ Global.PagesViews }}ckeditor/ckeditor.js",function() {
+				console.log("Editor");
+					CKEDITOR.replace("pageText");
+			});
+
+	});
+	</script>

@@ -10,34 +10,144 @@ div.shadow-left {
 div.no-padding-left {
 	padding-left: 0px;
 }
+.container { position: relative; }
 
 #sidePanel {
 	background-color:#34495e;
+	color:#fff;
+	padding-right:0px;
 }
+#sidePanel > div span.glyphicon {
+	font-size: 3em;
+}
+#sidePanel > div {
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+#sidePanel > div:hover {
+	background-color:#2c3e50;
+	cursor: pointer;
+	color:#ecf0f1;
+}
+
+#sidePanel > div.active {
+	background-color: #2c3e50;
+	color:#ecf0f1;
+}
+
 .heading {
 	background-color: #ecf0f1;
 	min-height: 75px;
 	border-bottom: 1px solid #bdc3c7;
 }
-.heading h2 {
+.heading h2, .heading input[type="text"] {
 	margin: 0px;
 	padding: 0px 0px 0px 10px;
 	font-size: 32px;
 	line-height: 75px;
 	color: #7f8c8d;
 }
+.heading input[type="text"] {
+	border: 0px;
+	background: transparent;
+}
+.heading input[type="text"]:focus {
+	outline-style:none;
+	box-shadow: none;
+	border:0px;
+}
+#sideBarExtra {
+	position:absolute;
+	left:20%;
+	display:none;
+	z-index: 10;
+	width:0%;
+	background-color: #fff;
+}
+#sideBarExtra .group .title {
+	background-color: #7f8c8d;
+	color:#fff;
+	border: 0px;
+	height: 23px;
+	line-height: 23px;
+	padding-left: 5px;
+}
+
+#sideBarExtra .group .input {
+	background-color: transparent;;
+	border: 0px;
+	width:100%;
+	border-bottom: 1px solid  #bdc3c7; 
+	height: 23px;
+	font-weight: lighter;
+	padding-left: 5px;
+}
+
 #mainSideBar {
 	display: none;
 	position: relative;
+	z-index: 10;
 }
 
 #mainContent {
 	width: 100%;
+	overflow-y:scroll;
 }
 
-#mainContent .subline {
+.subline {
 	background-color: #2980b9;
 	color:#fff;
 	padding: 5px 5px 5px 10px;
 	border-bottom: 1px solid #95a5a6;
+}
+#loader {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	width: 100%;
+	background-color: rgba(0,0,0,0);
+	display:none;
+	z-index: 9999999;
+}
+#loader .spinner {
+	width: 60px;
+	height: 60px;
+	position: fixed;
+	left:50%;
+	top: 50%;
+	margin-left:-30px;
+	margin-top: -30px;
+
+	-webkit-animation: rotation .6s infinite linear;
+	-moz-animation: rotation .6s infinite linear;
+	-o-animation: rotation .6s infinite linear;
+	animation: rotation .6s infinite linear;
+	border-left:6px solid rgba(0,174,239,.15);
+	border-right:6px solid rgba(0,174,239,.15);
+	border-bottom:6px solid rgba(0,174,239,.15);
+	border-top:6px solid rgba(0,174,239,.8);
+	border-radius:100%;
+	}
+
+	@-webkit-keyframes rotation {
+	from {-webkit-transform: rotate(0deg);}
+	to {-webkit-transform: rotate(359deg);}
+	}
+
+	@-moz-keyframes rotation {
+	from {-moz-transform: rotate(0deg);}
+	to {-moz-transform: rotate(359deg);}
+	}
+
+	@-o-keyframes rotation {
+	from {-o-transform: rotate(0deg);}
+	to {-o-transform: rotate(359deg);}
+	}
+
+	@keyframes rotation {
+	from {transform: rotate(0deg);}
+	to {transform: rotate(359deg);}
 }

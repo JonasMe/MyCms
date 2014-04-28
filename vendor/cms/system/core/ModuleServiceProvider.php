@@ -14,63 +14,43 @@ namespace Cms\System\Core;
         $modules->fetchModules();
         $modules->registerModules();
 
-        \Route::any('Module/{module}/{class}', function($module,$class) {
-                    if( strpos($module, ".") !== false ) {
-                    $exploded = explode(".", $module);
-                    $package = $exploded[0];
-                    $module = $exploded[1];
-                    $class  = \Input::get('class',  $class );
-                    $method = \Input::get('method', null );
-                    $args   = \Input::get('args',   array() );
-                    $args   = ( !is_array($args) ? json_decode($args,true) : $args);
-                    if( $mod = \Modules::get($package,$module) ) {
-                        if( is_null($class) ) {
-                            return ""; //$class = $mod->getMain();
-                        }
-                        return $mod->getAdvanced($class,$method,$args);
-                    }
-                }
-
-        });
-
         \Route::any('Module/{module}/{class}/{method}', function($module,$class,$method) {
-                    if( strpos($module, ".") !== false ) {
-                    $exploded = explode(".", $module);
-                    $package = $exploded[0];
-                    $module = $exploded[1];
-                    $class  = \Input::get('class',  $class );
-                    $method = \Input::get('method', $method );
-                    $args   = \Input::get('args',   array() );
-                    $args   = ( !is_array($args) ? json_decode($args,true) : $args);
-                    if( $mod = \Modules::get($package,$module) ) {
-                        if( is_null($class) ) {
-                            return ""; //$class = $mod->getMain();
-                        }
-                        return $mod->getAdvanced($class,$method,$args);
-                    }
-                }
-
+            return $this->transformToDirectCall($module,$class,$method);
         });
 
         \Route::any('Module/{module}/{class}/{method}/{arguments}', function($module,$class,$method,$arguments) {
+            return $this->transformToDirectCall($module,$class,$method,$arguments);
+        })->where('arguments', '.*');;
+
+    }
+
+    private function transformToDirectCall($module,$class,$method,$arguments = null) {
                     if( strpos($module, ".") !== false ) {
                     $exploded = explode(".", $module);
                     $package = $exploded[0];
                     $module = $exploded[1];
-                    $class  = \Input::get('class',  $class );
-                    $method = \Input::get('method', $method );
-                    $args   = \Input::get('args',   ( strpos($arguments, "/") !== false ? explode("/",$arguments) : array($arguments) ) );
-                    $args   = ( !is_array($args) ? json_decode($args,true) : $args);
+                    $args   = ( strpos($arguments, "/") !== false ? explode("/",$arguments) : (is_null($arguments) ? array() : array($arguments) ) );
+
                     if( $mod = \Modules::get($package,$module) ) {
-                        if( is_null($class) ) {
-                            return ""; //$class = $mod->getMain();
+                        $module = $mod->get($class);
+                        if( isset( $module->directCalling ) ) {
+                            if( $module->directCalling !== false ) {
+                                if( !is_array($module->directCalling) && $module->directCalling === true ) {
+                                    return $mod->getAdvanced($module,$method,$args);
+                                } elseif( is_array($module->directCalling) && in_array($method, $module->directCalling) ) {
+                                    return $mod->getAdvanced($module,$method,$args);
+                                }
+                            } 
                         }
-                        return $mod->getAdvanced($class,$method,$args);
+
+                         throw new \Exception(sprintf("%s of %s does not allow direct calling",$method,$class));
+                    
+                    } else {
+                        throw new \Exception( sprintf("Module %s does not exist.",$module) );
                     }
+                } else {
+                    throw new \Exception( sprintf("First url parameter must be in format Package.Modulename. %s given. ", $module) );
                 }
-
-        })->where('arguments', '.*');;
-
     }
  
     /**

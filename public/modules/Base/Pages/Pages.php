@@ -6,7 +6,7 @@
 		private $prependFilePath;
 		public $CurrentPage;
 
-		public function initPage($slug) {
+		public function initPage($slug = null) {
 			$this->CurrentPage = $this->getPage($slug);
 			return $this->CurrentPage->render();
 		}

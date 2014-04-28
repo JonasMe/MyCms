@@ -1,0 +1,26 @@
+ul.tree {
+    margin: 0px;
+    padding:0px;
+}
+ul.tree > li {
+    border-bottom: 1px solid #7f8c8d;
+}
+ul.tree li {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    padding:5px;
+}
+
+ul.tree li:hover {
+    background-color: #ecf0f1;
+}
+
+ul.tree li a, ul.tree li a:hover {
+    color:#2c3e50;
+    text-decoration: none;
+}
+
+ul.tree li a .expander {
+    margin-right: 5px;
+}
